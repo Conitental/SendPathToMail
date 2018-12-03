@@ -19,7 +19,7 @@ For Each path In paths
 
 		' if no drive letter can be retrieved the path is not valid
 		If isEmpty(driveLetter) Then
-			MsgBox "The following path cannot be validated:" + vbCrLf + path, vbOKOnly, "Detected local file"
+			MsgBox "The following path cannot be validated:" + vbCrLf + path, vbOKOnly, "Path is not valid"
 			Exit Do
 		End If
 
