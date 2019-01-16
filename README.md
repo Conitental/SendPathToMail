@@ -9,7 +9,7 @@ SendPathToMail will only work on machines with installed Microsoft Outlook appli
 
 ## Installation
 To use this extension simply place the script itself or a link to it in the following windows users profile path:
-`%APPDATA%\Roaming\Microsoft\Windows\SendTo`
+`%APPDATA%\Microsoft\Windows\SendTo`
 
 ## Usage
 To use the script after installation simply select at least one file and select `Send to` in the context menu and then select `SendPathToMail`. This will open outlook with an empty mail and the actual filepaths.
