@@ -3,7 +3,7 @@
 ' resolve the filepath of the selected file and send it using outlook
 '
 ' Author: Constantin Heinzler
-' Last Change: 01.12.2018
+' Last Change: 21.01.2019
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
