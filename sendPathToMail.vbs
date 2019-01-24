@@ -3,7 +3,7 @@
 ' resolve the filepath of the selected file and send it using outlook
 '
 ' Author: Constantin Heinzler
-' Last Change: 21.01.2019
+' Last Change: 24.01.2019
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
@@ -15,11 +15,12 @@ Dim driveLetter, realDrive, fullPath, mailBody
 For Each path In paths
 	' create a false loop to simulate modern "continue" statements in VBS
 	Do
-		driveLetter = stripPath(path)
+		driveLetter = isMappedDrive(path)
 
-		' if no drive letter can be retrieved the path is not valid
+		' if no drive letter can be retrieved the drive is not mapped and will be transfered directly
 		If isEmpty(driveLetter) Then
-			MsgBox "The following path cannot be validated:" + vbCrLf + path, vbOKOnly, "Path is not valid"
+			fullPath = concatRealPath("REAL", path)
+			mailBody = mailBody + "<br>" + fullPath
 			Exit Do
 		End If
 
@@ -67,18 +68,24 @@ Sub openMail(pathsToSend)
 End Sub
 
 Function concatRealPath(realDrive, rawPath)
-	' strip two characters of the raw path ( e.g.: "C:\Windows\" --> "Windows\")
-	Dim nakedPath
-	nakedPath = Mid(RawPath, 3)
+	' if "REAL" is given as realDrive the path is already valid and does not need to be processed
+	If realDrive = "REAL" Then
+		fullPath = rawPath
+	Else
+		' strip two characters of the raw path ( e.g.: "C:\Windows\" --> "Windows\")
+		Dim nakedPath
+		nakedPath = Mid(RawPath, 3)
 
-	' concat and add file:/// for the link to be clickable
-	' use html to enable spaces in paths
-	Dim fullPath
-	fullPath = realDrive + nakedPath
+		' concat and add file:/// for the link to be clickable
+		' use html to enable spaces in paths
+		Dim fullPath
+		fullPath = realDrive + nakedPath
+	End If
+
 	concatRealPath = "<a href=""file:///" + fullPath + """>" + fullPath + "</a>"
 End Function
 
-Function stripPath(path)
+Function isMappedDrive(path)
 	' strip the first characterr of the given path and validate to be a drive assigned letter
 	Dim char
 	char = Left(path, 1)
@@ -92,7 +99,7 @@ Function stripPath(path)
 
 	' output the char if it is a letter and end function if not
 	If isLetter = True Then
-	    stripPath = char
+	    isMappedDrive = char
 	End If
 End Function
 
