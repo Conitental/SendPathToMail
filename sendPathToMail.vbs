@@ -133,17 +133,17 @@ Function getNetDrive(assignedLetter, netUseOutput)
 End Function
 
 Function shellRun(sCmd)
-    'Run a shell command, returning the output as a string
+    ' Run a shell command, returning the output as a string
     Dim oShell
     Set oShell = CreateObject("WScript.Shell")
     
-    'run command
+    ' run command
     Dim oExec
     Dim oOutput
     Set oExec = oShell.Exec(sCmd)
     Set oOutput = oExec.StdOut
 
-    'handle the results as they are written to and read from the StdOut object
+    ' handle the results as they are written to and read from the StdOut object
     Dim s
     Dim sLine
     While Not oOutput.AtEndOfStream
