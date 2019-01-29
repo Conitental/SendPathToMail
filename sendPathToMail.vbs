@@ -3,12 +3,16 @@
 ' resolve the filepath of the selected file and send it using outlook
 '
 ' Author: Constantin Heinzler
-' Last Change: 24.01.2019
+' Last Change: 29.01.2019
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
 '=========================================================================
 Set paths = Wscript.Arguments
+
+' run command to get raw wireless output
+Dim netDrives
+netDrives = shellRun("NET USE")
 
 ' loop through all available arguments (->paths)
 Dim driveLetter, realDrive, fullPath, mailBody
@@ -24,7 +28,8 @@ For Each path In paths
 			Exit Do
 		End If
 
-		realDrive = getNetDrive(driveLetter)
+		' search for the driveLetter in the prior loaded netDrives and return the correct server
+		realDrive = getNetDrive(driveLetter, netDrives)
 
 		' continue if no net use drive could be found (for it is a local drive then)
 		If isEmpty(realDrive) Then
@@ -103,17 +108,13 @@ Function isMappedDrive(path)
 	End If
 End Function
 
-Function getNetDrive(assignedLetter)
-	' run command to get raw wireless output
-	Dim netDrives
-	netDrives = shellRun("NET USE")
-
+Function getNetDrive(assignedLetter, netUseOutput)
 	' regex net use output and find given letter
 	Set re = New RegExp
 	re.Pattern = assignedLetter + ":.*"
 	re.IgnoreCase = True
 	re.Global = True
-	Set matches = re.Execute(netDrives)
+	Set matches = re.Execute(netUseOutput)
 
 	' get single found line
 	Dim driveRaw
