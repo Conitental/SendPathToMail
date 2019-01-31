@@ -8,7 +8,49 @@
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
 '=========================================================================
-Set paths = Wscript.Arguments
+
+' create FileSystemObject
+Set fs = CreateObject("Scripting.FileSystemObject")
+
+' static path to temporary cache file
+Dim tempDir
+tempDir = fs.GetSpecialFolder(2)
+Dim tempPath
+tempPath = tempDir & "\temp.sptm"
+Dim cookiePath
+cookiePath = tempDir & "\cookie.sptm"
+
+' create a temporary cookie file to show that the main script is running
+set cookie = fs.OpenTextFile(cookiePath, 8, True)
+' write something to the cookie
+cookie.WriteLine "I'm alive!"
+' close temp file
+cookie.close
+
+' wait a short time to give the handler scripts time to finish
+WScript.Sleep(2500)
+
+' check if the temp file has been created and quit if not
+If Not fs.FileExists(tempPath) Then Wscript.Quit()
+
+' open temp file
+Set file = fs.OpenTextFile( tempPath, 1)
+
+Dim paths()
+
+' loop through lines in temp file and add to array
+i = 0
+Do While file.AtEndOfStream <> True
+    line = file.ReadLine
+    ReDim Preserve paths(i)
+    paths(i) = line
+    i=i+1
+loop
+' close file reading
+file.Close
+
+' recheck if the file is still existing and delete it
+If fs.FileExists(tempPath) Then fs.DeleteFile tempPath
 
 ' run command to get raw wireless output
 Dim netDrives
@@ -47,6 +89,12 @@ If isEmpty(mailBody) Then Wscript.Quit
 
 ' actually open email using connected links
 openMail(mailBody)
+
+' finally deleting the cookie file to show that the main process is finished
+If fs.FileExists(cookiePath) Then fs.DeleteFile cookiePath
+
+' end script process
+Wscript.Quit()
 
 '=========================================================================
 ' FUNCTIONS

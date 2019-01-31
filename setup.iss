@@ -25,14 +25,15 @@ UninstallDisplayIcon={app}\icon.ico
 
 [Files]
 Source: "sendPathToMail.vbs"; DestDir: "{app}"
+Source: "sendPathToHandler.vbs"; DestDir: "{app}"
 Source: "icon.ico"; DestDir: "{app}"
 
 [Registry]
 ; add the context menu item to files
 Root: HKLM; Subkey: "SOFTWARE\Classes\*\shell\SendPathToMail"; Flags: uninsdeletekey; ValueType: string; ValueData: "Send path as mail"
 Root: HKLM; Subkey: "SOFTWARE\Classes\*\shell\SendPathToMail"; Flags: uninsdeletekey; ValueType: string; ValueData: "{app}\icon.ico"; ValueName: "Icon"
-Root: HKLM; Subkey: "SOFTWARE\Classes\*\shell\SendPathToMail\command"; Flags: uninsdeletekey; ValueType: string; ValueData: "wscript ""{app}\sendPathToMail.vbs"" ""%1"""
+Root: HKLM; Subkey: "SOFTWARE\Classes\*\shell\SendPathToMail\command"; Flags: uninsdeletekey; ValueType: string; ValueData: "wscript ""{app}\sendPathToHandler.vbs"" ""%1"""
 ; add the context menu item to folders
 Root: HKLM; Subkey: "SOFTWARE\Classes\Directory\shell\SendPathToMail"; Flags: uninsdeletekey; ValueType: string; ValueData: "Send path as mail"
 Root: HKLM; Subkey: "SOFTWARE\Classes\Directory\shell\SendPathToMail"; Flags: uninsdeletekey; ValueType: string; ValueData: "{app}\icon.ico"; ValueName: "Icon"
-Root: HKLM; Subkey: "SOFTWARE\Classes\Directory\shell\SendPathToMail\command"; Flags: uninsdeletekey; ValueType: string; ValueData: "wscript ""{app}\sendPathToMail.vbs"" ""%1"""
+Root: HKLM; Subkey: "SOFTWARE\Classes\Directory\shell\SendPathToMail\command"; Flags: uninsdeletekey; ValueType: string; ValueData: "wscript ""{app}\sendPathToHandler.vbs"" ""%1"""
