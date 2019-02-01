@@ -8,8 +8,7 @@ So `H:\Somefile.txt` will result in `\\Server01\Somefile.txt`.
 SendPathToMail will only work on machines with installed Microsoft Outlook application.
 
 ## Installation
-To use this extension simply place the script itself or a link to it in the following windows users profile path:
-`%APPDATA%\Microsoft\Windows\SendTo`
+The installation can be done using the releases binary. Currently the installation requires administrator rights.
 
 ## Usage
-To use the script after installation simply select at least one file and select `Send to` in the context menu and then select `SendPathToMail`. This will open outlook with an empty mail and the actual filepaths.
+Use SPTM by selecting up to 15 (this is the windows threshold up to which context menu items are displayed) folders or files on a network drive or share and select `Send path as mail` in the context menu.
