@@ -2,6 +2,8 @@
 #define MyAppVersion "1.0.0"
 #define MyAppPublisher "Constantin Heinzler"
 #define MyAppURL "https://github.com/Conitental/SendPathToMail"
+#define MyAppSupportURL "https://github.com/Conitental/SendPathToMail/issues"
+#define MyAppUpdatesURL "https://github.com/Conitental/SendPathToMail/releases"
 
 [Setup]
 AppId={{DAC9996F-1E9E-498B-A871-CB9AF9861B38}
@@ -9,8 +11,8 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
-AppSupportURL={#MyAppURL}
-AppUpdatesURL={#MyAppURL}
+AppSupportURL={#MyAppSupportURL}
+AppUpdatesURL={#MyAppUpdatesURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableDirPage=yes
 DefaultGroupName={#MyAppName}
