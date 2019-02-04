@@ -40,6 +40,7 @@ Set file = fs.OpenTextFile( tempPath, 1)
 Dim paths()
 
 ' loop through lines in temp file and add to array
+Dim i
 i = 0
 Do While file.AtEndOfStream <> True
     line = file.ReadLine
