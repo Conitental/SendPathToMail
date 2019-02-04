@@ -85,6 +85,10 @@ For Each path In paths
 	Loop While False
 Next
 
+' alert the local path's
+If Not isEmpty(localPaths) Then
+	MsgBox "The following path's cannot be attached to an email as it is stored on a local drive:" + vbCrLf + vbCrLf + localPaths + vbCrLf + "Place the file's on a network share and try again.", vbOKOnly, "Detected local files"
+End If
 ' end script if no path could be retrieved
 If isEmpty(mailBody) Then Wscript.Quit
 
