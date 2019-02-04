@@ -3,7 +3,7 @@
 ' resolve the filepath of the selected file and send it using outlook
 '
 ' Author: Constantin Heinzler
-' Version: 1.0.1
+' Version: 1.0.2
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
@@ -21,12 +21,14 @@ tempPath = tempDir & "\temp.sptm"
 Dim cookiePath
 cookiePath = tempDir & "\cookie.sptm"
 
-' create a temporary cookie file to show that the main script is running
-Set cookie = fs.OpenTextFile(cookiePath, 8, True)
-' write something to the cookie
-cookie.WriteLine "I'm alive!"
-' close temp file
-cookie.close
+If isWritable(cookiePath) Then
+	' access cookie if possible and lock other instances
+	Dim cookie
+	Set cookie = fs.OpenTextFile(cookiePath, 8, True)
+Else
+	' end script if write access is not possible (meaning another instance is already running)
+	Wscript.Quit()
+End If
 
 ' wait a short time to give the handler scripts time to finish
 WScript.Sleep(2500)
@@ -35,21 +37,22 @@ WScript.Sleep(2500)
 If Not fs.FileExists(tempPath) Then Wscript.Quit()
 
 ' open temp file
-Set file = fs.OpenTextFile( tempPath, 1)
+Dim tempFile
+Set tempFile = fs.OpenTextFile( tempPath, 1)
 
 Dim paths()
 
 ' loop through lines in temp file and add to array
 Dim i
 i = 0
-Do While file.AtEndOfStream <> True
-    line = file.ReadLine
+Do While tempFile.AtEndOfStream <> True
+    line = tempFile.ReadLine
     ReDim Preserve paths(i)
     paths(i) = line
     i = i + 1
 loop
 ' close file reading
-file.Close
+tempFile.Close
 
 ' recheck if the file is still existing and delete it
 If fs.FileExists(tempPath) Then fs.DeleteFile tempPath
@@ -102,16 +105,14 @@ If Not isEmpty(invalidPaths) Then
 	MsgBox "The following path's could not be validated:" + vbCrLf + vbCrLf + invalidPaths, vbOKOnly, "Detected local files"
 End If
 
-' finally deleting the cookie file to show that the main process is finished
-If fs.FileExists(cookiePath) Then fs.DeleteFile cookiePath
-
 ' end script if no path could be retrieved
-If isEmpty(mailBody) Then Wscript.Quit
+If isEmpty(mailBody) Then Wscript.Quit()
 
 ' actually open email using connected links
 openMail(mailBody)
 
-' end script process
+' close cookie file and release lock for new instances and end script
+cookie.Close
 Wscript.Quit()
 
 '=========================================================================
@@ -165,4 +166,23 @@ Function getNetDrive(drive)
 	letter = Left(drive, 1)
 	Set share = fs.GetDrive(CStr(letter))
 	getNetDrive = share.ShareName
+End Function
+
+Function isWritable(filePath)
+    ' attempt to write to the given file path and return result
+    isWritable = False
+
+    On Error Resume Next
+
+    ' try to open the file
+    Dim file
+    Set file = fs.OpenTextFile(filePath, 2, True)
+    ' check if a error occured
+    If Err.Number = 0 Then
+        file.Close
+        If Not Err Then isWritable = True
+    End If
+
+    On Error GoTo 0
+
 End Function

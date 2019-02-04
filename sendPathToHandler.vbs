@@ -4,7 +4,7 @@
 ' This is needed for implementation in the windows context menu.
 ' 
 ' Author: Constantin Heinzler
-' Version: 1.0.1
+' Version: 1.0.2
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
@@ -42,26 +42,23 @@ file.close
 Dim cookiePath
 cookiePath = tempDir & "\cookie.sptm"
 
-If (fs.FileExists(cookiePath)) Then
-	WScript.Quit()
-Else
- 	Dim objShell
- 	Set objShell = Wscript.CreateObject("WScript.Shell")
+' start a main instance
+Dim objShell
+Set objShell = Wscript.CreateObject("WScript.Shell")
 
- 	Dim currentDir
- 	currentDir = fs.GetParentFolderName(WScript.ScriptFullName)
- 	' Chr(34) being double quotes to escape the path
- 	realScript = Chr(34) + currentDir + "\sendPathToMail.vbs" + Chr(34)
+Dim currentDir
+currentDir = fs.GetParentFolderName(WScript.ScriptFullName)
+' Chr(34) being double quotes to escape the path
+realScript = Chr(34) + currentDir + "\sendPathToMail.vbs" + Chr(34)
 
- 	' use extra cscript call to enable hidden execution
- 	Dim command
- 	command = "cscript " + realScript
+' use extra cscript call to enable hidden execution
+Dim command
+command = "cscript " + realScript
 
- 	' 0 = run hidden, True = wait for task completion
- 	objShell.Run command, 0, True
+' 0 = run hidden, True = wait for task completion
+objShell.Run command, 0, True
 
- 	' clean up
- 	Set objShell = Nothing
+' clean up
+Set objShell = Nothing
 
- 	WScript.Quit()
-End If
+WScript.Quit()
