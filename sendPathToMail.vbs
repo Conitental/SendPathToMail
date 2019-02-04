@@ -162,6 +162,6 @@ End Function
 Function getNetDrive(drive)
 	Dim letter, share
 	letter = Left(drive, 1)
-	Set share = fs.GetDrive(letter)
+	Set share = fs.GetDrive(CStr(letter))
 	getNetDrive = share.ShareName
 End Function
