@@ -19,7 +19,7 @@ Set fs = CreateObject("Scripting.FileSystemObject")
 
 ' static path to temporary cache file
 Dim tempDir
-tempDir = WScript.CreateObject("Scripting.FileSystemObject").GetSpecialFolder(2)
+tempDir = fs.GetSpecialFolder(2)
 Dim tempPath
 tempPath = tempDir & "\temp.sptm"
 ' open the file in append mode
