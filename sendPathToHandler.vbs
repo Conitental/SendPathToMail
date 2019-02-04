@@ -14,7 +14,7 @@
 ' expect multiple paths if script is implemented in SendTo directory
 Set paths = Wscript.Arguments
 
-DIM fs    
+Dim fs    
 Set fs = CreateObject("Scripting.FileSystemObject")
 
 ' static path to temporary cache file
