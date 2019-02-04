@@ -10,6 +10,7 @@
 '=========================================================================
 
 ' create FileSystemObject
+Dim fs
 Set fs = CreateObject("Scripting.FileSystemObject")
 
 ' static path to temporary cache file
