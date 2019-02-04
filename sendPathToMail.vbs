@@ -22,7 +22,7 @@ Dim cookiePath
 cookiePath = tempDir & "\cookie.sptm"
 
 ' create a temporary cookie file to show that the main script is running
-set cookie = fs.OpenTextFile(cookiePath, 8, True)
+Set cookie = fs.OpenTextFile(cookiePath, 8, True)
 ' write something to the cookie
 cookie.WriteLine "I'm alive!"
 ' close temp file
@@ -45,7 +45,7 @@ Do While file.AtEndOfStream <> True
     line = file.ReadLine
     ReDim Preserve paths(i)
     paths(i) = line
-    i=i+1
+    i = i + 1
 loop
 ' close file reading
 file.Close
