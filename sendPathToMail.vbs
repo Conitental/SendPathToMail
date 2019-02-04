@@ -68,6 +68,9 @@ For Each path In paths
 			invalidPaths = invalidPaths + path + vbCrLf
 			Exit Do
 		End If
+
+		' if the length of the driveLetter is not equal to 2, and not empty the drive is a unc path
+		If Len(driveLetter) <> 2 Then
 			fullPath = concatRealPath("REAL", path)
 			mailBody = mailBody + "<br>" + fullPath
 			Exit Do
