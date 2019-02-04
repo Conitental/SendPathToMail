@@ -53,8 +53,8 @@ file.Close
 ' recheck if the file is still existing and delete it
 If fs.FileExists(tempPath) Then fs.DeleteFile tempPath
 
-' declare variable to store paths that are local
-Dim localPaths
+' declare variable to store paths that are local or invalid
+Dim localPaths, invalidPaths
 
 ' loop through all available arguments (->paths)
 Dim driveLetter, realDrive, fullPath, mailBody
@@ -63,8 +63,11 @@ For Each path In paths
 	Do
 		driveLetter = isMappedDrive(path)
 
-		' if no drive letter can be retrieved the drive is not mapped and will be transfered directly
-		If driveLetter = "" Then
+		If driveLetter = empty Then
+			' append current path to invalid paths
+			invalidPaths = invalidPaths + path + vbCrLf
+			Exit Do
+		End If
 			fullPath = concatRealPath("REAL", path)
 			mailBody = mailBody + "<br>" + fullPath
 			Exit Do
@@ -88,6 +91,11 @@ Next
 ' alert the local path's
 If Not isEmpty(localPaths) Then
 	MsgBox "The following path's cannot be attached to an email as it is stored on a local drive:" + vbCrLf + vbCrLf + localPaths + vbCrLf + "Place the file's on a network share and try again.", vbOKOnly, "Detected local files"
+End If
+
+' alert the invalid path's
+If Not isEmpty(invalidPaths) Then
+	MsgBox "The following path's could not be validated:" + vbCrLf + vbCrLf + invalidPaths, vbOKOnly, "Detected local files"
 End If
 
 ' finally deleting the cookie file to show that the main process is finished
