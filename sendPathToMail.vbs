@@ -89,14 +89,15 @@ Next
 If Not isEmpty(localPaths) Then
 	MsgBox "The following path's cannot be attached to an email as it is stored on a local drive:" + vbCrLf + vbCrLf + localPaths + vbCrLf + "Place the file's on a network share and try again.", vbOKOnly, "Detected local files"
 End If
+
+' finally deleting the cookie file to show that the main process is finished
+If fs.FileExists(cookiePath) Then fs.DeleteFile cookiePath
+
 ' end script if no path could be retrieved
 If isEmpty(mailBody) Then Wscript.Quit
 
 ' actually open email using connected links
 openMail(mailBody)
-
-' finally deleting the cookie file to show that the main process is finished
-If fs.FileExists(cookiePath) Then fs.DeleteFile cookiePath
 
 ' end script process
 Wscript.Quit()
