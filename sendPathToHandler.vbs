@@ -37,9 +37,12 @@ file.close
 ' check if SendPathToMail is already running
 ' If the cookie file exists -> Script is running and nothing should be done
 ' Otherwise start the script
-Dim cookie
-cookie = "%temp%\cookie.sptm"
-If (fs.FileExists(cookie)) Then
+' static path to temporary cache file
+
+Dim cookiePath
+cookiePath = tempDir & "\cookie.sptm"
+
+If (fs.FileExists(cookiePath)) Then
 	WScript.Quit()
 Else
  	Dim objShell
