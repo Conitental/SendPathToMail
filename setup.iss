@@ -1,5 +1,5 @@
 #define MyAppName "SendPathToMail"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Constantin Heinzler"
 #define MyAppURL "https://github.com/Conitental/SendPathToMail"
 #define MyAppSupportURL "https://github.com/Conitental/SendPathToMail/issues"

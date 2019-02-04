@@ -3,7 +3,7 @@
 ' resolve the filepath of the selected file and send it using outlook
 '
 ' Author: Constantin Heinzler
-' Version: 1.0.0
+' Version: 1.0.1
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
@@ -52,9 +52,8 @@ file.Close
 ' recheck if the file is still existing and delete it
 If fs.FileExists(tempPath) Then fs.DeleteFile tempPath
 
-' run command to get raw wireless output
-Dim netDrives
-netDrives = shellRun("NET USE")
+' declare variable to store paths that are local
+Dim localPaths
 
 ' loop through all available arguments (->paths)
 Dim driveLetter, realDrive, fullPath, mailBody
@@ -64,22 +63,23 @@ For Each path In paths
 		driveLetter = isMappedDrive(path)
 
 		' if no drive letter can be retrieved the drive is not mapped and will be transfered directly
-		If isEmpty(driveLetter) Then
+		If driveLetter = "" Then
 			fullPath = concatRealPath("REAL", path)
 			mailBody = mailBody + "<br>" + fullPath
 			Exit Do
 		End If
 
-		' search for the driveLetter in the prior loaded netDrives and return the correct server
-		realDrive = getNetDrive(driveLetter, netDrives)
+		' resolve unc path from driveLetter
+		realDrive = getNetDrive(driveLetter)
 
 		' continue if no net use drive could be found (for it is a local drive then)
-		If isEmpty(realDrive) Then
-			MsgBox "The following path cannot be attached to an email as it is stored on a local drive:" + vbCrLf + path + vbCrLf + "Place the file on a network share and try again.", vbOKOnly, "Detected local file"
+		If realDrive = "" Then
+			' append local path to all local paths and add a new line
+			localPaths = localPaths + path + vbCrLf
 			Exit Do
 		End If
-		fullPath = concatRealPath(realDrive, path)
 
+		fullPath = concatRealPath(realDrive, path)
 		mailBody = mailBody + "<br>" + fullPath
 	Loop While False
 Next
@@ -139,65 +139,12 @@ Function concatRealPath(realDrive, rawPath)
 End Function
 
 Function isMappedDrive(path)
-	' strip the first characterr of the given path and validate to be a drive assigned letter
-	Dim char
-	char = Left(path, 1)
-
-	' regex to validate char
-	Set re = New RegExp
-	re.Pattern = "[a-z]"
-	re.IgnoreCase = True
-	re.Global = True
-	isLetter = re.Test(char)
-
-	' output the char if it is a letter and end function if not
-	If isLetter = True Then
-	    isMappedDrive = char
-	End If
+	isMappedDrive = fs.GetDriveName(path)
 End Function
 
-Function getNetDrive(assignedLetter, netUseOutput)
-	' regex net use output and find given letter
-	Set re = New RegExp
-	re.Pattern = assignedLetter + ":.*"
-	re.IgnoreCase = True
-	re.Global = True
-	Set matches = re.Execute(netUseOutput)
-
-	' get single found line
-	Dim driveRaw
-	Dim match
-	For Each match in matches
-	  driveRaw = match.value
-	Next
-
-	' match drive assignment until a space appears
-	re.Pattern = "\\[^\s]+"
-	Set matches = re.Execute(driveRaw)
-
-	For Each match in matches
-	  getNetDrive = match.value
-	Next
-End Function
-
-Function shellRun(sCmd)
-    ' Run a shell command, returning the output as a string
-    Dim oShell
-    Set oShell = CreateObject("WScript.Shell")
-    
-    ' run command
-    Dim oExec
-    Dim oOutput
-    Set oExec = oShell.Exec(sCmd)
-    Set oOutput = oExec.StdOut
-
-    ' handle the results as they are written to and read from the StdOut object
-    Dim s
-    Dim sLine
-    While Not oOutput.AtEndOfStream
-        sLine = oOutput.ReadLine
-        If sLine <> "" Then s = s & sLine & vbCrLf
-    Wend
-
-    shellRun = s
+Function getNetDrive(drive)
+	Dim letter, share
+	letter = Left(drive, 1)
+	Set share = fs.GetDrive(letter)
+	getNetDrive = share.ShareName
 End Function
