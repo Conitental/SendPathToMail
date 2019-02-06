@@ -4,7 +4,7 @@
 ' This is needed for implementation in the windows context menu.
 ' 
 ' Author: Constantin Heinzler
-' Version: 1.0.2
+' Version: 1.0.3
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
@@ -22,8 +22,9 @@ Dim tempDir
 tempDir = fs.GetSpecialFolder(2)
 Dim tempPath
 tempPath = tempDir & "\temp.sptm"
-' open the file in append mode
-set file = fs.OpenTextFile(tempPath, 8, True)
+' 8 => AppendMode, True => Create file if not existing, -1 => Open as Unicode
+Dim file
+Set file = fs.OpenTextFile(tempPath, 8, True, -1)
 
 ' loop through available paths and write to file
 For Each path In paths

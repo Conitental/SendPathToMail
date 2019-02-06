@@ -3,7 +3,7 @@
 ' resolve the filepath of the selected file and send it using outlook
 '
 ' Author: Constantin Heinzler
-' Version: 1.0.2
+' Version: 1.0.3
 ' License: MIT
 '=========================================================================
 ' ACTUAL SCRIPT PROCESS
@@ -36,9 +36,9 @@ WScript.Sleep(2500)
 ' check if the temp file has been created and quit if not
 If Not fs.FileExists(tempPath) Then Wscript.Quit()
 
-' open temp file
+' 1 => ReadMode, False => Do not create file if not existing, -1 => Open as Unicode
 Dim tempFile
-Set tempFile = fs.OpenTextFile( tempPath, 1)
+Set tempFile = fs.OpenTextFile( tempPath, 1, False, -1)
 
 Dim paths()
 
